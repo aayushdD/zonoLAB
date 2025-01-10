@@ -12,7 +12,7 @@ disp(['Using order reduction technique: ', orderReductionTechnique]);
 
 switch orderReductionTechnique
         case 'Exact'
-            obj = exactApproximation(obj, setType,final_order);  % Call exact approximation
+            obj = exactApproximation(obj, setType);  % Call exact approximation
         case 'Outer'
             obj = outerApproximation(obj, setType,final_order);  % Call outer approximation
         case 'Inner'
@@ -23,7 +23,7 @@ end
 end
 
 
-function obj= exactApproximation(obj,setType,final_order)
+function obj= exactApproximation(obj,setType)
 switch setType
     case 'Zonotope'
         nG = obj.nG;
@@ -34,8 +34,54 @@ switch setType
             end
         end
         obj=zono(reduced_G,obj.c);
-    case 'Constraint Zonotope'
-        obj=obj
+    case 'Constraint Zonotope'    
+        A=obj.A;
+        b=obj.b;
+        c=obj.c;
+        G=obj.G;
+
+        zeroCols=find(all(G==0,1));
+        G(:,zeroCols)=[];
+        A(:,zeroCols)=[];
+        nG=size(G,2);
+
+        [E,R]=refine_bounds_function(A,b);
+        for i=1:nG
+            if E(i,1)==E(i,2)
+                c=c+G(:,i)*E(i,1);  
+                G(:,i)=[];
+                b=b-A(:,i)*E(i,1);
+                A(:,i)=[];
+                obj=conZono(G,c,A,b);
+                break;
+            end
+            if R(i,1)==R(i,2)
+                c=c+G(:,i)*R(i,1);  
+                G(:,i)=[];
+                b=b-A(:,i)*R(i,1);
+                A(:,i)=[];
+                obj=conZono(G,c,A,b);
+                break;
+            end
+            if R(i,1)> E(i,1)
+                if R(i,2)<= E(i,2)
+                    removable_constraint=i;
+                    [G_new,c_new,A_new,b_new]=constraint_remover_function(G,c,A,b,removable_constraint);
+                    obj=conZono(G_new,c_new,A_new,b_new);
+                    break;
+                end
+            end
+            if R(i,2)<E(i,2)
+                if R(i,2)>=E(i,1)
+                    removable_constraint=i;
+                    [G_new,c_new,A_new,b_new]=constraint_remover_function(G,c,A,b,removable_constraint);
+                    obj=conZono(G_new,c_new,A_new,b_new);
+                    break;
+                end
+            end
+        end
+        obj=conZono(G,c,A,b);
+        
     case 'Hybrid Zonotope'
         obj=obj
 end
