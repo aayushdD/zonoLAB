@@ -1,4 +1,4 @@
-function [G_new, c_new, A_new, b_new] = constraint_remover_function(G, c, A, b, removable_constraint)
+function [G_new, c_new, A_new, b_new] = constraint_remover_function(G, c, A, b, removable_direction)
 % CONSTRAINT_REDUCTION - Perform constraint reduction for zonotopes.
 % 
 % Inputs:
@@ -21,11 +21,11 @@ function [G_new, c_new, A_new, b_new] = constraint_remover_function(G, c, A, b, 
 
     % Step 1: Define the E matrix
     E = zeros(n_g, n_c);
-    E(removable_constraint, 1) = 1; % Place a 1 at the (j, 1) position
+    E(removable_direction, 1) = 1; % Place a 1 at the (j, 1) position
 
     % Step 2: Compute \Lambda_G and \Lambda_A
-    A_j = A(removable_constraint, :); % The j-th row of A
-    a_1j = A_j(1); % The (j, 1) element of A
+    A_j = A(1, :); % The j-th row of A
+    a_1j = A_j(removable_direction); % The (j, 1) element of A
     Lambda_G = G * E / a_1j; % \Lambda_G = G * E * a_1j^(-1)
     Lambda_A = A * E / a_1j; % \Lambda_A = A * E * a_1j^(-1)
 
@@ -42,8 +42,8 @@ function [G_new, c_new, A_new, b_new] = constraint_remover_function(G, c, A, b, 
     b_new = b - Lambda_A * b;
 
     % Step 7: Remove the j-th constraint
-    A_new(removable_constraint, :) = [];
-    b_new(removable_constraint) = [];
+    A_new(1, :) = [];
+    b_new(1) = [];
 
     % Display results (optional for debugging)
     % disp('Updated Generator Matrix G:');
