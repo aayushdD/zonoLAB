@@ -40,43 +40,63 @@ switch setType
         c=obj.c;
         G=obj.G;
 
-        zeroCols=find(all(G==0,1));
+        zeroCols=find(all([G;A]==0,1));
+
         G(:,zeroCols)=[];
-        A(:,zeroCols)=[];
-        nG=size(G,2);
+        
+        zerorows=find(all([A,b]==0,2));
+
+        A(zerorows,:)=[];
+        b(zerorows)=[];
 
         [E,R]=refine_bounds_function(A,b);
+
+        equal_indices = find(E(:, 1) == E(:, 2));
+        c = c + sum(G(:, equal_indices) .* E(equal_indices, 1)', 2);
+        G(:,equal_indices)=[];        
+        b=b-sum(A(:,equal_indices).*E(equal_indices,1)',2);
+        A(:,equal_indices)=[];
+        %obj=conZono(G,c,A,b);
+        R(equal_indices,:)=[];
+
+        equal_indices = find(R(:, 1) == R(:, 2));
+        c = c + sum(G(:, equal_indices) .* E(equal_indices, 1)', 2);
+        G(:,equal_indices)=[];
+        b=b-sum(A(:,equal_indices).*E(equal_indices,1)',2);
+        A(:,equal_indices)=[];
+        % obj=conZono(G,c,A,b);
+
+        nG=size(G,2);
+
         for i=1:nG
-            if E(i,1)==E(i,2)
-                c=c+G(:,i)*E(i,1);  
-                G(:,i)=[];
-                b=b-A(:,i)*E(i,1);
-                A(:,i)=[];
-                obj=conZono(G,c,A,b);
-                break;
-            end
-            if R(i,1)==R(i,2)
-                c=c+G(:,i)*R(i,1);  
-                G(:,i)=[];
-                b=b-A(:,i)*R(i,1);
-                A(:,i)=[];
-                obj=conZono(G,c,A,b);
-                break;
-            end
+            % if E(i,1)==E(i,2)
+            %     c=c+G(:,i)*E(i,1);  
+            %     G(:,i)=[];
+            %     b=b-A(:,i)*E(i,1);
+            %     A(:,i)=[];
+            %     obj=conZono(G,c,A,b);
+            %     break;
+            % end
+            % if R(i,1)==R(i,2)
+            %     c=c+G(:,i)*R(i,1);  
+            %     G(:,i)=[];
+            %     b=b-A(:,i)*R(i,1);
+            %     A(:,i)=[];
+            %     obj=conZono(G,c,A,b);
+            %     break;
+            % end
             if R(i,1)> E(i,1)
                 if R(i,2)<= E(i,2)
                     removable_constraint=i;
-                    [G_new,c_new,A_new,b_new]=constraint_remover_function(G,c,A,b,removable_constraint);
-                    obj=conZono(G_new,c_new,A_new,b_new);
-                    break;
+                    [G,c,A,b]=constraint_remover_function(G,c,A,b,removable_constraint);
+                    % obj=conZono(G,c,A,b);
                 end
             end
             if R(i,2)<E(i,2)
                 if R(i,2)>=E(i,1)
                     removable_constraint=i;
-                    [G_new,c_new,A_new,b_new]=constraint_remover_function(G,c,A,b,removable_constraint);
-                    obj=conZono(G_new,c_new,A_new,b_new);
-                    break;
+                    [G,c,A,b]=constraint_remover_function(G,c,A,b,removable_constraint);
+                    % obj=conZono(G,c,A,b);
                 end
             end
         end

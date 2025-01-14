@@ -31,6 +31,7 @@ function [G_new, c_new, A_new, b_new] = constraint_remover_function(G, c, A, b, 
 
     % Step 3: Update the generator matrix G
     G_new = G - Lambda_G * A;
+    G_new(:,find(all(G_new==0,1)))=[];
 
     % Step 4: Update the center vector c
     c_new = c + Lambda_G * b;
