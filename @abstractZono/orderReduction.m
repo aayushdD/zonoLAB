@@ -43,7 +43,7 @@ switch setType
         zeroCols=find(all([G;A]==0,1));
 
         G(:,zeroCols)=[];
-        
+  
         zerorows=find(all([A,b]==0,2));
 
         A(zerorows,:)=[];
@@ -66,36 +66,20 @@ switch setType
         A(:,equal_indices)=[];
         % obj=conZono(G,c,A,b);
 
+        [E,R]=refine_bounds_function(A,b);        
         nG=size(G,2);
 
         for i=1:nG
-            % if E(i,1)==E(i,2)
-            %     c=c+G(:,i)*E(i,1);  
-            %     G(:,i)=[];
-            %     b=b-A(:,i)*E(i,1);
-            %     A(:,i)=[];
-            %     obj=conZono(G,c,A,b);
-            %     break;
-            % end
-            % if R(i,1)==R(i,2)
-            %     c=c+G(:,i)*R(i,1);  
-            %     G(:,i)=[];
-            %     b=b-A(:,i)*R(i,1);
-            %     A(:,i)=[];
-            %     obj=conZono(G,c,A,b);
-            %     break;
-            % end
             if R(i,1)> E(i,1)
                 if R(i,2)<= E(i,2)
-                    removable_constraint=i;
-                    [G,c,A,b]=constraint_remover_function(G,c,A,b,removable_constraint);
+                    [G,c,A,b]=constraint_remover_function(G,c,A,b);
                     % obj=conZono(G,c,A,b);
                 end
+                  continue;            
             end
             if R(i,2)<E(i,2)
-                if R(i,2)>=E(i,1)
-                    removable_constraint=i;
-                    [G,c,A,b]=constraint_remover_function(G,c,A,b,removable_constraint);
+                if R(i,1)>=E(i,1)
+                    [G,c,A,b]=constraint_remover_function(G,c,A,b);
                     % obj=conZono(G,c,A,b);
                 end
             end
