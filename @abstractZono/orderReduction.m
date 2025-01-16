@@ -49,6 +49,8 @@ switch setType
         A(zerorows,:)=[];
         b(zerorows)=[];
 
+        %Recalculation because the indices have been modified
+
         [E,R]=refine_bounds_function(A,b);
 
         equal_indices = find(E(:, 1) == E(:, 2));
