@@ -1,0 +1,2 @@
+This folder contains all the necessary codes to recreate the RC set example. The Rc_example.m file can be edited to run varieties of experiments that will
+result in RC calculations with changing time, and reduction schedule. 

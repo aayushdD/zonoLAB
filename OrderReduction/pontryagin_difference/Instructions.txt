@@ -1,0 +1,6 @@
+This folder contains code that can be used to find if a constrained zonotope is actually a zonotope. 
+If it is a zonotope the zonotopic version can be found for 2D. Thanks to algorithm 3 from the paper:
+
+"A linear optimization oracle for zonotope computation"
+
+Run algo3_implementation to run an example. 

@@ -1,0 +1,13 @@
+This folder contains. 
+
+1. Set containment of two zonotopes or con zonotopes given a tolerance and hausdorff distance. 
+
+2. Currently can only work for 2D and 3D sets because uses plot function from zonolab. 
+
+3. Also contains contain_check_v3 which is the function for containment check. 
+
+4. vrep_to_Hrep takes the vertices and converts to Hrep using the MPT3 toolbox
+
+
+
+An alternative to set containment problems using optimization based methods. Only works in small dimensions. 

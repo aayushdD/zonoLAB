@@ -1,0 +1,2 @@
+To run this example. Run the ReLu_nn.m file, then use nn_experiments to reduce all the leaves from the NN. Reduction can be done by using alternative methods.
+The alternative methods are not present in this folder and must be added to the path before attempting.  

@@ -1,0 +1,21 @@
+This folder contains the following. 
+
+
+1. The orderReduction function is the most abstract order reduction function in zonolab. The function houses code for exact reduction, over and inner approximations
+of all types of zonotopic sets. Some might be complete and some are still being worked on. 
+
+2. The "method" reduce is the exclusively proposed exact reduction method for conzono representation. This function is used when orderReduction is used for 
+exact reduction of constrained zonotopes.
+
+3. Alternative_methods contains all the alternative method of exact order reduction for constrained zonotopes. 
+
+4. Examples contains two examples that are self running and demonstrate the application of exact order reduction of constrained zonotopes. 
+
+
+5. Haussdorff_setcontain contains files for set containment checks within a hausdorff distance that can be chosen.
+
+
+6. pontryagin_difference contains code for the zonotope in latent space being represented as a constrained zonotope problem. 
+
+
+7. Only contains files applicable for conZono and Zono. No support for hyb zonotopes until now. 
